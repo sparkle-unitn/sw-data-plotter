@@ -1,0 +1,7 @@
+3 # number of samples
+1 # number of signals
+
+# list of "x y" tuples to plot. x should always increase
+1 2
+2 3
+3 8
