@@ -32,24 +32,34 @@ else:
     exit(1)
 
 
-# get number of samples and signals
-samples = int(input_next_line())
+# get number of signals
 number_of_signals = int(input_next_line())
 
-# each signal is a pair of parallel arrays. the first is for the x values, the second for the y values
-signals = [(np.array([]), np.array([]))] * number_of_signals
+# each signal is a tuple of two parallel arrays and a label. 1st element is x values, 2nd y values, third label
+signals = []
 
-# get signal data
-for i in range(samples):
-    sample = str_to_array_of_optional_floats(input_next_line())
-    for j in range(number_of_signals):
-        x, y = signals[j]
-        x = np.append(x, sample[j*2])
-        y = np.append(y, sample[j*2+1])
-        signals[j] = (x, y)
+# get each signal's data
+for _ in range(number_of_signals):
+    # get signal label
+    label = input_next_line()
+    # get number of samples
+    samples = int(input_next_line())
+    # get samples
+    x = np.array([])
+    y = np.array([])
+    for _ in range(samples):
+        sample = str_to_array_of_optional_floats(input_next_line())
+        x = np.append(x, sample[0])
+        y = np.append(y, sample[1])
+    signals.append((x,y,label))
+
+
+print("signals: ")
+for x,y,label in signals:
+    print("%s: %d datapoints" % (label,len(y)))
 
 # interpolate missing x-coord values
-for x,_ in signals:
+for x,_,_ in signals:
     for i in range(len(x)):
         #make a dictionary with the contents of x
         x_dict = {i:v for i,v in enumerate(x) if v != None }
@@ -58,7 +68,8 @@ for x,_ in signals:
 
 
 # actually plot the signal
-for x,y in signals:
-    plt.plot(x, y)
+for x,y,label in signals:
+    plt.plot(x, y, ".", label=label)
+plt.legend(loc="upper left")
 plt.show()
 

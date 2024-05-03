@@ -10,26 +10,32 @@ Data needs to be written on a file that is then passed as argument to the progra
 
 where `INPUT_FILE` is the path to a text file with the following structure:
 
-1. on the first line the number of samples collected;
-1. on the second line the number of separate signals to be displayed;
-1. the rest of the lines will contain the actual signal data. each line will represent a single sample, and is formed by whitespace separated numbers read in pairs. each pair will represent the x (generally the acquisition time) and y (generally the value being read) values.
-    * the x values must always be ordered
-    * some x values can be omitted by specifying '\*' instead, and they will be interpolated between other existing readings (which is why it is needed for them to be in order). Interpolation of the first or last values is impossible and will not yield useful results, but the rest of the graph will still be displayed. (This feature is meant to be used with values obtained through DMA, which are harder to put a timestamp on)
+1. on the first line the number N of separate signals to be displayed;
+1. on the rest of the lines there will be N sequences of lines, each representing a signal, with the following structure:
+    1. a line containing the label for the signal, to be displayed in the legend;
+    1. a line containing the number M of samples collected for this signal;
+    1. M lines each containing a whitespace-separated pair of coordinates to plot;
+        * some x values may be omitted by specifying `*` instead, and they will be interpolated between adjacent ones. This feature is meant to be used with values obtained through DMA, which are harder to put a timestamp on.
+            * Interpolation of the first/last value(s) is impossible, and will yield the x of the next/previous point;
+            * to ensure correct interpolation x values must be monotonically nondecreasing.
 
-Comments:
-* if an input line contains '#' followed by any other characters those will be considered a comment ('#' included obviously)
-* empty lines and lines containing only whitespace or comments will be ignored
+
+Comments and spacing:
+* if an input line contains '#' followed by any other characters those will be considered a comment and ignored ('#' included, of course);
+* empty lines and lines containing only whitespace or comments will be ignored;
+* whitespace at the beginning and end of input lines will be ignored.
 
 ## Example input file
 
 ```
-3 # number of samples
 1 # number of signals
 
-# list of "x y" tuples to plot
+name of signal # the name that will appear in the graph's legend
+3 # number of samples
+# list of "x y" tuples to plot. x should always increase
 1 2
 2 3
-3 8
+3 8 
 ```
 
-some other more advanced example input files are provided under example_inputs/
+Some other more advanced example input files are provided under `example_inputs/`.

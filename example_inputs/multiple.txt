@@ -1,7 +1,15 @@
-3 # number of samples
 2 # number of signals
 
-# list of "x0 y0 x1 y1" tuples to plot (can be decimal). x should always increase
-1 2     1 3
-2 3     2 9
-3 8     3 27
+first signal # signal label
+3 # number of samples
+# list of "x y" tuples to plot (can be decimal). x should always increase
+1 3
+2 9
+3 27
+
+second signal
+4
+1 2
+2 4
+3 8
+4 16
