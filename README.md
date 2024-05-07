@@ -10,11 +10,9 @@ Data needs to be written on a file that is then passed as argument to the progra
 
 where `INPUT_FILE` is the path to a text file with the following structure:
 
-1. on the first line the number N of separate signals to be displayed;
-1. on the rest of the lines there will be N sequences of lines, each representing a signal, with the following structure:
+- Each signal is represented by a series of lines with the following structure:
     1. a line containing the label for the signal, to be displayed in the legend;
-    1. a line containing the number M of samples collected for this signal;
-    1. M lines each containing a whitespace-separated pair of coordinates to plot;
+    1. a line for each sample, containing a whitespace-separated pair of coordinates to plot;
         * some x values may be omitted by specifying `*` instead, and they will be interpolated between adjacent ones. This feature is meant to be used with values obtained through DMA, which are harder to put a timestamp on.
             * Interpolation of the first/last value(s) is impossible, and will yield the x of the next/previous point;
             * to ensure correct interpolation x values must be monotonically nondecreasing.

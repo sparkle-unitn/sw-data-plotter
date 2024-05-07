@@ -1,8 +1,6 @@
-1 # number of signals
-
 name of signal # the name that will appear in the graph's legend
-3 # number of samples
 # list of "x y" tuples to plot. x should always increase
 1 2
 2 3
 3 8
+END_OF_SIGNAL

@@ -5,12 +5,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# get next line, ignoring comments (with # syntax) and empty lines
+# get next line, ignoring comments (with # syntax) and empty lines. returns None on EOF
 def input_next_line():
-    while True:
-        s = input().split('#')[0].strip()
-        if len(s):
-            return s
+    try:
+        while True:
+            s = input().split('#')[0].strip()
+            if len(s):
+                return s
+    except EOFError:
+        return None
 
 # from a string containing whitespace-separated numbers return an array of floats. * in the string will correspond to a None value in the array
 def str_to_array_of_optional_floats(s):
@@ -31,24 +34,23 @@ else:
     print("usage: %s INPUT_FILE" % sys.argv[0])
     exit(1)
 
-
-# get number of signals
-number_of_signals = int(input_next_line())
-
 # each signal is a tuple of two parallel arrays and a label. 1st element is x values, 2nd y values, third label
 signals = []
 
 # get each signal's data
-for _ in range(number_of_signals):
+while True:
     # get signal label
     label = input_next_line()
-    # get number of samples
-    samples = int(input_next_line())
+    if label == None:
+        break # EOF
     # get samples
     x = np.array([])
     y = np.array([])
-    for _ in range(samples):
-        sample = str_to_array_of_optional_floats(input_next_line())
+    while True:
+        line = input_next_line()
+        if line == "END_OF_SIGNAL":
+            break
+        sample = str_to_array_of_optional_floats(line)
         x = np.append(x, sample[0])
         y = np.append(y, sample[1])
     signals.append((x,y,label))
