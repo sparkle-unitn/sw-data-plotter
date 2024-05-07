@@ -56,10 +56,6 @@ while True:
     signals.append((x,y,label))
 
 
-print("signals: ")
-for x,y,label in signals:
-    print("%s: %d datapoints" % (label,len(y)))
-
 # interpolate missing x-coord values
 for x,_,_ in signals:
     for i in range(len(x)):
@@ -67,6 +63,12 @@ for x,_,_ in signals:
         x_dict = {i:v for i,v in enumerate(x) if v != None }
 
         x[i] = np.interp(i, [*x_dict.keys()], [*x_dict.values()])
+
+# print signal information: how many datapoints, deltax from beginning to end, sample frequency
+print("signals: ")
+for x,y,label in signals:
+    deltax = max(x) - min(x)
+    print("\t%s: %d datapoints / %f delta x = %f" % (label, len(y), deltax, len(y)/deltax))
 
 
 # actually plot the signal
