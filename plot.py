@@ -3,7 +3,12 @@
 import sys
 import math
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib as mpl
+from matplotlib import pyplot as plt
+from mplcairo import operator_t # mpl backend for additive blending support
+
+#set mplcairo as mpl backend
+mpl.use("module://mplcairo.qt")
 
 
 
@@ -14,17 +19,16 @@ def main():
     else:
         print("usage: %s INPUT_FILE" % sys.argv[0])
         exit(1)
-    
+
     
     signals = get_signals_data(input_file)
     
     interpolate_x_values(signals)
 
-    print("%s" % [signals])
-    
     print_signals_info(signals)
-    
-    plot_signals(signals)
+
+    line_mode=(len(sys.argv) > 2 and sys.argv[2] == "line")
+    plot_signals(signals, line_mode)
 
 # get next line, ignoring comments (with # syntax) and empty lines. returns None on EOF
 def input_next_line(fp):
@@ -100,28 +104,35 @@ def interpolate_x_values(signals):
 
 # print signal information: how many datapoints, deltax from beginning to end, sample frequency
 def print_signals_info(signals):
-    print("signals: ")
+    print("signals:")
     for label,(x,y) in signals.items():
         deltax = max(x) - min(x)
-        print("\t%s: %d datapoints / %f delta x = %f" % (label, len(y), deltax, len(y)/deltax))
+        print("> %s: %d datapoints / %f delta x = %f" % (label, len(y), deltax, len(y)/deltax))
 
 # plot the signals with matplotlib
-def plot_signals(signals):
-    def expand(x,y, gap=1e-4):
-        add = np.tile([0, gap, np.nan], len(x))
-        x1 = np.repeat(x, 3) + add
-        y1 = np.repeat(y, 3) + add
-        return x1, y1
-    plt.rcParams['lines.solid_capstyle'] = 'round'
+def plot_signals(signals, line_mode):
+    # supposedly increases performance
+    mpl.style.use("fast")
+    mpl.rcParams['path.simplify_threshold'] = 1.0
+
+
+    fig, ax = plt.subplots()
+    # The figure and axes background must be made transparent to use additive blending
+    fig.patch.set(alpha=0, color="#000000")
+    ax.patch.set(alpha=0, color="#000000")
     
-    fig = plt.figure(figsize=(4,4))
-    ax = fig.add_subplot(111, title="Test scatter")
-    for label, (x,y) in signals.items():
-        ax.plot(*expand(x,y), label=label, lw=4, alpha=0.7)
-    
+    color_palette = ['#ff0000', '#0000ff', '#00ff00', 'c', 'm', 'y', 'k']
+
+    for i, (label, (x,y)) in enumerate(signals.items()):
+        color = color_palette[i % len(color_palette)]
+
+        if line_mode:
+            ax.plot(x,y,c=color,label=label,marker='.')
+        else:
+            pc = ax.scatter(x, y, c=color, label=label, marker='.')
+            operator_t.ADD.patch_artist(pc)  # Use additive blending.
+        
     plt.legend(loc="upper left")
     plt.show()
-
-
 
 main()

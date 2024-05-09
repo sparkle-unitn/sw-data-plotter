@@ -4,9 +4,13 @@ Data Plotter is a simple tool useful to plot data, specifically streams of data 
 
 Data needs to be written on a file that is then passed as argument to the program, which will parse the file and display a graph.
 
+## Dependencies
+
+The script depends on `numpy`, `matplotlib` and `mplcairo`
+
 ## Usage
 
-`python plot.py INPUT_FILE`
+`python plot.py INPUT_FILE [line]`
 
 where `INPUT_FILE` is the path to a text file with the following structure:
 
@@ -17,6 +21,7 @@ where `INPUT_FILE` is the path to a text file with the following structure:
             * Interpolation of the first/last value(s) is impossible, and will yield the x of the next/previous point;
             * to ensure correct interpolation x values must be monotonically nondecreasing.
 
+The word 'line', specified after the input file, changes the visualization from a scatter plot to a line plot
 
 Comments and spacing:
 * if an input line contains '#' followed by any other characters those will be considered a comment and ignored ('#' included, of course);
