@@ -37,3 +37,17 @@ name of signal # the name that will appear in the graph's legend
 ```
 
 Some other more advanced example input files are provided under `example_inputs/`.
+
+
+## Profiling:
+You may profile the script with the following command:
+
+```
+python -m pyflame -a "--width 4000" plot.py example_inputs/many_points.txt
+```
+
+> [!NOTE]
+> Before running it pyflame and flamegraph need to be installed.
+
+The command will generate a file "plot.py.svg" in the working directory. To visualize it you may use gimp or any other image viewer supporting svg.
+
