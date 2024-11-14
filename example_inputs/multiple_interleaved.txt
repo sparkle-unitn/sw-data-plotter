@@ -1,0 +1,28 @@
+first signal # signal label
+# list of "x y" tuples to plot (can be decimal). x should always increase
+1 3
+2 9
+3 27
+END_OF_SIGNAL
+
+second signal
+1 2
+2 4
+3 8
+4 16
+END_OF_SIGNAL
+
+
+first signal # signal label
+# list of "x y" tuples to plot (can be decimal). x should always increase
+4 3
+5 9
+6 27
+END_OF_SIGNAL
+
+second signal
+5 2
+6 4
+7 8
+8 16
+END_OF_SIGNAL

@@ -60,7 +60,6 @@ def str_to_array_of_optional_floats(s):
             ret.append(float(word))
     return ret
 
-
 # read the input file, returns an dictionary of signals, where each signal is a tuple of two parallel arrays with its label as key {label : (x_array, y_array), ...}
 def get_signals_data(fp):
     signals = {}
@@ -87,9 +86,15 @@ def get_signals_data(fp):
         else:
             assert(input_next_line(fp) == "END_OF_SIGNAL")
 
-        signals[label] = (x,y)
+        # if the label already exists only concatenate the new points, otherwise create a new signal
+        if label in signals:
+            signals[label] = (
+                np.concatenate((signals[label][0], x)), 
+                np.concatenate((signals[label][1], y))
+            )
+        else:
+            signals[label] = (x,y)
     return signals
-
 
 # interpolate missing x-coord values
 def interpolate_x_values(signals):
