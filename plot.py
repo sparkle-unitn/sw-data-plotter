@@ -2,6 +2,7 @@
 
 import sys
 import math
+import argparse
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
@@ -11,24 +12,24 @@ from mplcairo import operator_t # mpl backend for additive blending support
 mpl.use("module://mplcairo.qt")
 
 
-
 def main():
-    #read from the path specified in the first command line arg
-    if len(sys.argv) > 1:
-        input_file = open(sys.argv[1], 'r')
-    else:
-        print("usage: %s INPUT_FILE" % sys.argv[0])
-        exit(1)
+    parser = argparse.ArgumentParser()
 
+    parser.add_argument('filename', type=str, help='Path to data file')
+    parser.add_argument('--line-mode', action='store_true', help='A boolean switch that controls whether the program is in line mode or in scatter mode')
+    parser.add_argument('--maximum', type=int, default=4096, help='Maximum value for the signals, after which they get clipped')
+
+    args = parser.parse_args()
+
+    input_file = open(args.filename, 'r')
     
-    signals = get_signals_data(input_file)
+    signals = get_signals_data(input_file, args.maximum)
     
     interpolate_x_values(signals)
 
     print_signals_info(signals)
 
-    line_mode=(len(sys.argv) > 2 and sys.argv[2] == "line")
-    plot_signals(signals, line_mode)
+    plot_signals(signals, args.line_mode)
 
 # get next line, ignoring comments (with # syntax) and empty lines. returns None on EOF
 def input_next_line(fp):
@@ -61,7 +62,7 @@ def str_to_array_of_optional_floats(s):
     return ret
 
 # read the input file, returns an dictionary of signals, where each signal is a tuple of two parallel arrays with its label as key {label : (x_array, y_array), ...}
-def get_signals_data(fp):
+def get_signals_data(fp, maximum):
     signals = {}
 
     # get each signal's data
@@ -80,9 +81,17 @@ def get_signals_data(fp):
             line = input_next_line(fp)
             if line == "END_OF_SIGNAL":
                 break
-            sample = str_to_array_of_optional_floats(line)
+            try:
+                sample = str_to_array_of_optional_floats(line)
+            except:
+                print("warning: line '" + line + "' could not be converted to array of optional floats")
+                continue
+
+            if len(sample) < 2:
+                print("warning: line '" + line + "' should contain 2 values")
+                continue
             x[i] = sample[0]
-            y[i] = sample[1]
+            y[i] = min(sample[1], maximum)
         else:
             assert(input_next_line(fp) == "END_OF_SIGNAL")
 
@@ -113,6 +122,7 @@ def print_signals_info(signals):
     for label,(x,y) in signals.items():
         deltax = max(x) - min(x)
         print("> %s: %d datapoints / %f delta x = %f" % (label, len(y), deltax, len(y)/deltax))
+
 
 # plot the signals with matplotlib
 def plot_signals(signals, line_mode):
