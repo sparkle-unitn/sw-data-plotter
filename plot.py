@@ -12,10 +12,13 @@ def main():
 
     parser = argparse.ArgumentParser()
 
+    default_maximum = 4096
+    default_backend = 'matplotlib'
+
     parser.add_argument('filename', type=str, help='Path to data file')
     parser.add_argument('--line-mode', action='store_true', help='A boolean switch that controls whether the program is in line mode or in scatter mode')
-    parser.add_argument('--maximum', type=int, default=4096, help='Maximum value for the signals, after which they get clipped')
-    parser.add_argument('--backend', default="matplotlib", choices=['matplotlib', 'bokeh'])
+    parser.add_argument('--maximum', type=int, default=default_maximum, help='Maximum value for the signals, after which they get clipped (default: '+str(default_maximum)+')')
+    parser.add_argument('--backend', default=default_backend, choices=['matplotlib', 'bokeh'], help='Sets the rendering backend (default: '+default_backend+')')
 
     args = parser.parse_args()
 
