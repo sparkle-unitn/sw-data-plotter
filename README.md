@@ -64,6 +64,20 @@ END_OF_SIGNAL
 
 Some other more advanced example input files are provided under `example_inputs/`.
 
+## Serial
+
+To connect correctly to the stm32 you need to configure some parameters
+of the serial terminal you are using.
+In the repo you can find the setup to use with [moserial](https://gitlab.gnome.org/GNOME/moserial).
+You can copy the parameters directly from there under `[port_settings]`.
+
+```
+sw-data-plotter/
+|- example_inputs/
+|- ...
+|- *moserial-setup*
+|- ...
+```
 
 ## Profiling:
 You may profile the script with the following command:
