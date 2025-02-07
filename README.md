@@ -1,3 +1,5 @@
+[![Watch the video](https://i.imgur.com/kdzFv8w.jpg)](https://i.imgur.com/W48R1hL.mp4)
+
 # Data Plotter
 
 Data Plotter is a simple tool useful to plot data, specifically streams of data sent by a microcontroller.
